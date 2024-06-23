@@ -119,7 +119,7 @@ const Beds = () => {
         </div>
         <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
           <Typography variant="h6">Remaining Bulb Hours</Typography>
-          <Typography variant="h6" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.palette.text.primary }}>{calculateBulbMinutes(data).usedBulbMinutes} minutes</Typography>
+          <Typography variant="h6" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.palette.text.primary }}>{calculateBulbMinutes(data).usedBulbHours} hr</Typography>
         </div>
       </div>
       <div className="charts" style={{ marginBottom: '30px' }}>

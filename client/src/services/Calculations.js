@@ -1,7 +1,8 @@
 // calculateBulbMinutes.js
-export function calculateBulbMinutes(data, totalBulbHours) {
-    totalBulbHours = calculateTotalBulbHours(data)
-    console.log(totalBulbHours)
+export function calculateBulbMinutes(data) {
+    // Calculate total bulb hours
+    const totalBulbHours = 1000;
+    
     // Convert total bulb hours to minutes
     const totalBulbMinutes = totalBulbHours * 60;
 
@@ -16,13 +17,29 @@ export function calculateBulbMinutes(data, totalBulbHours) {
     // Calculate remaining bulb minutes
     const remainingBulbMinutes = totalBulbMinutes - usedBulbMinutes;
 
+    // Convert used and remaining bulb minutes to hours
+    const usedBulbHours = usedBulbMinutes / 60;
+    const remainingBulbHours = remainingBulbMinutes / 60;
+
+    // Convert used and remaining bulb hours to days
+    const usedBulbDays = usedBulbHours / 24;
+    const remainingBulbDays = remainingBulbHours / 24;
+
     // Format the results to two decimal places
     const formattedUsedBulbMinutes = usedBulbMinutes.toFixed(2);
     const formattedRemainingBulbMinutes = remainingBulbMinutes.toFixed(2);
+    const formattedUsedBulbHours = usedBulbHours.toFixed(2);
+    const formattedRemainingBulbHours = remainingBulbHours.toFixed(2);
+    const formattedUsedBulbDays = usedBulbDays.toFixed(2);
+    const formattedRemainingBulbDays = remainingBulbDays.toFixed(2);
 
     return {
         usedBulbMinutes: formattedUsedBulbMinutes,
-        remainingBulbMinutes: formattedRemainingBulbMinutes
+        remainingBulbMinutes: formattedRemainingBulbMinutes,
+        usedBulbHours: formattedUsedBulbHours,
+        remainingBulbHours: formattedRemainingBulbHours,
+        usedBulbDays: formattedUsedBulbDays,
+        remainingBulbDays: formattedRemainingBulbDays
     };
 }
 

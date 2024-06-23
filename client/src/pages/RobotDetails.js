@@ -30,20 +30,27 @@ const RobotDetails = () => {
     return Object.values(usageByDate);
   }, [data]);
 
-  const usageByWardData = useMemo(() => {
-    const usageByWard = data.reduce((acc, curr) => {
-      const ward = curr.Location2;
-      const start = new Date(curr.startTime);
-      const end = new Date(curr.endTime);
-      const operationHours = (end - start) / (1000 * 60 * 60);
-      if (!acc[ward]) {
-        acc[ward] = { ward, usage: 0 };
-      }
-      acc[ward].usage += operationHours;
-      return acc;
-    }, {});
-    return Object.values(usageByWard);
-  }, [data]);
+  // Prepare data for Robot Usage by Ward Bar Chart
+const usageByWardData = useMemo(() => {
+  const usageByWard = data.reduce((acc, curr) => {
+    const ward = curr.Location2;
+    const start = new Date(curr.startTime);
+    const end = new Date(curr.endTime);
+    const operationHours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+    if (!acc[ward]) {
+      acc[ward] = { ward, usage: 0 };
+    }
+    acc[ward].usage += operationHours;
+    return acc;
+  }, {});
+
+  // Convert usage values to 2 decimal places
+  Object.values(usageByWard).forEach(ward => {
+    ward.usage = parseFloat(ward.usage.toFixed(2));
+  });
+
+  return Object.values(usageByWard);
+}, [data]);
 
   const diagnosticData = useMemo(() => {
     const diagnostics = data.reduce((acc, curr) => {
@@ -109,11 +116,11 @@ const RobotDetails = () => {
             <CardContent>
               <Typography variant="h6" style={{ marginBottom: '10px'   }}>Robot Statistics</Typography>
               
-              <Typography variant="body2" style={{ color: theme.palette.text.secondary }}>Total Robot Usage</Typography>
-              <Typography variant="body1" style={{ fontWeight: 'bold' }}>{calculateTotalBulbHours(data).toFixed(2)} hours</Typography>
+              <Typography variant="h5" style={{ color: theme.palette.text.secondary }}>Total Robot Usage</Typography>
+              <Typography variant="body1" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbHours} hours</Typography>
               <Divider style={{ margin: '10px 0' }} />
-              <Typography variant="body2" style={{ color: theme.palette.text.secondary }}>Remaining Bulb Hours</Typography>
-              <Typography variant="body1" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbMinutes} minutes</Typography>
+              <Typography variant="h5" style={{ color: theme.palette.text.secondary }}>Remaining Bulb Hours</Typography>
+              <Typography variant="body1" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).remainingBulbHours} hr</Typography>
             </CardContent>
           </Card>
         </Grid>

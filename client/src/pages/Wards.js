@@ -55,9 +55,9 @@ const Wards = () => {
       usage: data.filter(item => item.Location2 === ward).reduce((acc, curr) => {
         const start = new Date(curr.startTime);
         const end = new Date(curr.endTime);
-        const operationHours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+        const operationHours = ((end - start) / (1000 * 60 * 60)); // Convert milliseconds to hours
         return acc + operationHours;
-      }, 0)
+      }, 0).toFixed(2)
     }));
   }, [data, wards]);
 

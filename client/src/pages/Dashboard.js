@@ -67,11 +67,15 @@ const Dashboard = () => {
             <div className="summary-cards" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '30px' }}>
                 <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginRight: '20px' }}>
                     <h3>Total Operations</h3>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{totalOperations}</p>
+                    <p style={{ fontSize: '28px', fontWeight: 'bold' }}>{totalOperations}</p>
                 </div>
                 <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
-                    <h3>Remaining Bulb Minutes</h3>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbMinutes} minutes</p>
+                    <h3>Remaining Bulb Hours</h3>
+                    <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbHours} hr</p>
+                    <p style={{ fontSize: '20px' }}>{calculateBulbMinutes(data).usedBulbHours && (<>
+                    {calculateBulbMinutes(data).usedBulbDays} Days
+                    </>)}</p>
+
                 </div>
             </div>
             <div className="quick-links" style={{ marginBottom: '30px' }}>
