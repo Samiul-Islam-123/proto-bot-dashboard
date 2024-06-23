@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import { ClerkProvider } from '@clerk/clerk-react'
 
-const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_KEY
+const PUBLISHABLE_KEY = `pk_test_dmFsaWQtZHJhZ29uLTgxLmNsZXJrLmFjY291bnRzLmRldiQ`
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
