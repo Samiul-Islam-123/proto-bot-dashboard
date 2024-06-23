@@ -28,7 +28,13 @@ export const DataProvider = ({ children }) => {
 
   return (
     <DataContext.Provider value={{ data, loading, error }}>
-      {children}
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>Error: {error.message}</div>
+      ) : (
+        children
+      )}
     </DataContext.Provider>
   );
 };
