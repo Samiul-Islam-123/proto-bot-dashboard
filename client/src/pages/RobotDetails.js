@@ -15,20 +15,24 @@ const RobotDetails = () => {
   const { data } = useContext(DataContext);
   const theme = useTheme();
 
-  const usageByDateData = useMemo(() => {
+const usageByDateData = useMemo(() => {
     const usageByDate = data.reduce((acc, curr) => {
-      const date = new Date(curr.startTime).toLocaleDateString();
-      const start = new Date(curr.startTime);
-      const end = new Date(curr.endTime);
-      const operationHours = (end - start) / (1000 * 60 * 60);
-      if (!acc[date]) {
-        acc[date] = { date, usage: 0 };
-      }
-      acc[date].usage += operationHours;
-      return acc;
+        const date = new Date(curr.startTime).toLocaleDateString();
+        const start = new Date(curr.startTime);
+        const end = new Date(curr.endTime);
+        const operationHours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+        const roundedHours = parseFloat(operationHours.toFixed(2)); // Round to 2 decimal places
+
+        if (!acc[date]) {
+            acc[date] = { date, usage: 0 };
+        }
+        acc[date].usage += roundedHours;
+        return acc;
     }, {});
+    
     return Object.values(usageByDate);
-  }, [data]);
+}, [data]);
+
 
   // Prepare data for Robot Usage by Ward Bar Chart
 const usageByWardData = useMemo(() => {
@@ -69,15 +73,16 @@ const usageByWardData = useMemo(() => {
       const bed = curr.Location3;
       const start = new Date(curr.startTime);
       const end = new Date(curr.endTime);
-      const operationHours = (end - start) / (1000 * 60 * 60);
+      const operationHours = ((end - start) / (1000 * 60 * 60)).toFixed(2); // Calculate and round to 2 decimal places
       if (!acc[bed]) {
         acc[bed] = { bed, usage: 0 };
       }
-      acc[bed].usage += operationHours;
+      acc[bed].usage += parseFloat(operationHours); // Ensure usage is a number
       return acc;
     }, {});
     return Object.values(usageByBed);
   }, [data]);
+  
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -109,21 +114,35 @@ const usageByWardData = useMemo(() => {
   return (
     <div style={{ padding: '20px', background: theme.palette.background.default, color: theme.palette.text.primary }}>
       <Typography variant="h4" style={{ marginBottom: '20px', borderBottom: '2px solid #ccc', paddingBottom: '10px' }}>Robot Details</Typography>
+              <Typography variant="h6" style={{ marginBottom: '10px'   }}>Robot Statistics</Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
           <Card style={{  padding: '20px', background: theme.palette.primary.main, color:'white' }}>
  
             <CardContent>
-              <Typography variant="h6" style={{ marginBottom: '10px'   }}>Robot Statistics</Typography>
               
-              <Typography variant="h5" style={{ color: theme.palette.text.secondary }}>Total Robot Usage</Typography>
-              <Typography variant="body1" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbHours} hours</Typography>
-              <Divider style={{ margin: '10px 0' }} />
-              <Typography variant="h5" style={{ color: theme.palette.text.secondary }}>Remaining Bulb Hours</Typography>
-              <Typography variant="body1" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).remainingBulbHours} hr</Typography>
+              <Typography variant="h4" style={{ color: theme.palette.text.secondary }}>Total Robot Usage</Typography>
+              <Typography variant="h6" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbHours} hours</Typography>
+              
             </CardContent>
           </Card>
         </Grid>
+
+
+        <Grid item xs={12} md={6}>
+          <Card style={{  padding: '20px', background: theme.palette.primary.main, color:'white' }}>
+ 
+            <CardContent>
+              
+            <Typography variant="h4" style={{ color: theme.palette.text.secondary, }}>Remaining Bulb Hours</Typography>
+            <Typography variant="h6" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).remainingBulbHours} hr</Typography>
+              
+            </CardContent>
+          </Card>
+        </Grid>
+
+
+        
         
       </Grid>
       <Grid container spacing={2} style={{ marginTop: '20px' }}>

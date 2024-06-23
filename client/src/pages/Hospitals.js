@@ -72,19 +72,23 @@ const HospitalsPage = () => {
             const end = new Date(curr.endTime);
             const operationHours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
             return acc + operationHours;
-        }, 0)
+        }, 0).toFixed(2)
     }));
 
-    // Prepare data for Daily Operations Area Chart
-    const dailyOperationsData = usageTrendsData.reduce((acc, curr) => {
-        const existing = acc.find(item => item.date === curr.date);
-        if (existing) {
-            existing.operations += 1;
-        } else {
-            acc.push({ date: curr.date, operations: 1 });
-        }
-        return acc;
-    }, []);
+    // Prepare data for Daily Operations Line Chart
+    const dailyOperationsData = useMemo(() => {
+        const operationsByDate = data.reduce((acc, curr) => {
+            const date = curr.startTime.split(' ')[0]; // Extract date from startTime
+            if (!acc[date]) {
+                acc[date] = { date, operations: 0 };
+            }
+            acc[date].operations += 1;
+            return acc;
+        }, {});
+    
+        return Object.values(operationsByDate).sort((a, b) => new Date(a.date) - new Date(b.date));
+    }, [data]);
+    
 
     // Table state for sorting and pagination
     const [orderBy, setOrderBy] = useState('startTime');
@@ -161,25 +165,25 @@ const HospitalsPage = () => {
         <div style={{ padding: '20px', background: lightThemeColors.background, color: lightThemeColors.textPrimary }}>
             <h2 style={{ marginBottom: '20px', borderBottom: '2px solid #ccc', paddingBottom: '10px' }}>Hospitals</h2>
             <div className="summary-cards" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '30px' }}>
-                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginRight: '20px' }}>
+                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color: 'white', padding: '20px', borderRadius: '8px', marginRight: '20px' }}>
                     <h3>Total Hospitals</h3>
                     <p style={{ fontSize: '24px', fontWeight: 'bold', color: lightThemeColors.textPrimary }}>{totalHospitals}</p>
                 </div>
-                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
+                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color: 'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
                     <h3>Total Wards</h3>
                     <p style={{ fontSize: '24px', fontWeight: 'bold', color: lightThemeColors.textPrimary }}>{totalWards}</p>
                 </div>
-                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
+                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color: 'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
                     <h3>Total Beds</h3>
                     <p style={{ fontSize: '24px', fontWeight: 'bold', color: lightThemeColors.textPrimary }}>{totalBeds}</p>
                 </div>
-                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white',padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
+                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color: 'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
                     <h3>Total Robot Usage</h3>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold', color: lightThemeColors.textPrimary }}>{usedBulbHours.toFixed(2)} hours</p>
+                    <p style={{ fontSize: '24px', fontWeight: 'bold', color: lightThemeColors.textPrimary }}>{calculateBulbMinutes(data).usedBulbHours} hours</p>
                 </div>
-                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white',padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
-                    <h3>Remaining Bulb Minutes</h3>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold', color: lightThemeColors.textPrimary }}>{calculateBulbMinutes(data).usedBulbMinutes} minutes</p>
+                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color: 'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
+                    <h3>Remaining Bulb Hours</h3>
+                    <p style={{ fontSize: '24px', fontWeight: 'bold', color: lightThemeColors.textPrimary }}>{calculateBulbMinutes(data).remainingBulbHours} hr</p>
                 </div>
             </div>
             <div className="charts" style={{ marginBottom: '30px' }}>
@@ -237,14 +241,14 @@ const HospitalsPage = () => {
                         <h3>Daily Operations</h3>
                         <div style={{ background: lightThemeColors.background, padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
                             <ResponsiveContainer width="100%" height={300}>
-                                <AreaChart data={dailyOperationsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                <LineChart data={dailyOperationsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="date" />
                                     <YAxis />
                                     <Tooltip />
                                     <Legend />
-                                    <Area type="monotone" dataKey="operations" stroke={lightThemeColors.primaryColor} fill={lightThemeColors.primaryColor} />
-                                </AreaChart>
+                                    <Line type="monotone" dataKey="operations" stroke={lightThemeColors.primaryColor} />
+                                </LineChart>
                             </ResponsiveContainer>
                         </div>
                     </Grid>

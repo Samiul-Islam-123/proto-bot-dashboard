@@ -17,20 +17,24 @@ const Beds = () => {
   const theme = useTheme(); // Access the current theme
 
   // Aggregate usage data per bed
-  const usageByBedData = useMemo(() => {
-    const usageByBed = data.reduce((acc, curr) => {
+const usageByBedData = useMemo(() => {
+  const usageByBed = data.reduce((acc, curr) => {
       const key = `${curr.Location1} - ${curr.Location2} - Bed ${curr.Location3}`;
       const start = new Date(curr.startTime);
       const end = new Date(curr.endTime);
-      const operationHours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+      const operationHours = ((end - start) / (1000 * 60 * 60)).toFixed(2); // Convert milliseconds to hours and round to 2 decimal places
       if (!acc[key]) {
-        acc[key] = { name: key, usage: 0 };
+          acc[key] = { name: key, usage: 0 };
       }
-      acc[key].usage += operationHours;
+      acc[key].usage += parseFloat(operationHours); // Ensure usage is stored as a number
       return acc;
-    }, {});
-    return Object.values(usageByBed);
-  }, [data]);
+  }, {});
+  return Object.values(usageByBed).map(item => ({
+      ...item,
+      usage: parseFloat(item.usage.toFixed(2)) // Round the final usage value to 2 decimal places
+  }));
+}, [data]);
+
 
   // Calculate totalBubusage in minutes
   const totalBubusage = calculateTotalBulbHours(data) * 60; // Convert hours to minutes
@@ -39,10 +43,12 @@ const Beds = () => {
   const remainingBulbMinutes = parseFloat(calculateBulbMinutes(data).usedBulbMinutes); // Parse to float
 
   // Prepare data for Pie Chart
-  const pieChartData = [
-    { name: 'Total Bulb Usage', value: totalBubusage },
-    { name: 'Remaining Bulb Minutes', value: remainingBulbMinutes }
-  ];
+const pieChartData = [
+  { name: 'Total Bulb Usage', value: parseFloat(calculateBulbMinutes(data).usedBulbHours) },
+  { name: 'Remaining Bulb Minutes', value: parseFloat(calculateBulbMinutes(data).remainingBulbHours) }
+];
+
+
 
   const COLORS = ['#0088FE', '#FFBB28']; // Define colors for the pie chart segments
 
@@ -115,11 +121,11 @@ const Beds = () => {
       <div className="summary-cards" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '30px' }}>
         <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white',padding: '20px', borderRadius: '8px', marginRight: '20px' }}>
           <Typography variant="h5">Total Robot Usage</Typography>
-          <Typography variant="h6" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.palette.text.primary }}>{calculateTotalBulbHours(data).toFixed(2)} hours</Typography>
+          <Typography variant="h6" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.palette.text.primary }}>{calculateBulbMinutes(data).usedBulbHours} hours</Typography>
         </div>
         <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
           <Typography variant="h6">Remaining Bulb Hours</Typography>
-          <Typography variant="h6" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.palette.text.primary }}>{calculateBulbMinutes(data).usedBulbHours} hr</Typography>
+          <Typography variant="h6" style={{ fontSize: '24px', fontWeight: 'bold', color: theme.palette.text.primary }}>{calculateBulbMinutes(data).remainingBulbHours} hr</Typography>
         </div>
       </div>
       <div className="charts" style={{ marginBottom: '30px' }}>

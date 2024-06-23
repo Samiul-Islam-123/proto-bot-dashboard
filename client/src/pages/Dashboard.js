@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 import { Grid, useTheme } from '@mui/material';
 import { calculateBulbMinutes } from '../services/Calculations';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
     const { data } = useContext(DataContext);
@@ -62,91 +63,102 @@ const Dashboard = () => {
     return (
         <div style={{ padding: '20px', minHeight: '100vh' }}>
             {data && (<>
-            
-            <h2 style={{ marginBottom: '20px', borderBottom: '2px solid #ccc', paddingBottom: '10px' }}>Dashboard</h2>
-            <div className="summary-cards" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '30px' }}>
-                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginRight: '20px' }}>
-                    <h3>Total Operations</h3>
-                    <p style={{ fontSize: '28px', fontWeight: 'bold' }}>{totalOperations}</p>
-                </div>
-                <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
-                    <h3>Remaining Bulb Hours</h3>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbHours} hr</p>
-                    <p style={{ fontSize: '20px' }}>{calculateBulbMinutes(data).usedBulbHours && (<>
-                    </>)}</p>
 
-                </div>
-            </div>
-            <div className="quick-links" style={{ marginBottom: '30px' }}>
-                <h3>Quick Links</h3>
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    <li style={{ marginBottom: '10px', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>View Usage Overview</li>
-                    <li style={{ marginBottom: '10px', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>Explore Hospital Details</li>
-                    <li style={{ marginBottom: '10px', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>Check Robot Details</li>
-                </ul>
-            </div>
-            <div className="charts" style={{ marginBottom: '30px' }}>
-                <Grid container spacing={2}>
-                    <Grid item md={6} sm={12}>
-                        <h3>Usage Trends</h3>
-                        <div style={{ background: '#f0f0f0', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <LineChart data={usageTrendsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-                                    <XAxis dataKey="date" tick={{ fill: '#000' }} />
-                                    <YAxis tick={{ fill: '#000' }} />
-                                    <Tooltip contentStyle={{ background: '#f0f0f0', border: 'none', borderRadius: '8px', color: '#000' }} />
-                                    <Legend />
-                                    <Line type="monotone" dataKey="operations" stroke="#8884d8" activeDot={{ r: 8 }} />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </Grid>
+                <h2 style={{ marginBottom: '20px', borderBottom: '2px solid #ccc', paddingBottom: '10px' }}>Dashboard</h2>
+                <div className="summary-cards" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '30px' }}>
+                    <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color: 'white', padding: '20px', borderRadius: '8px', marginRight: '20px' }}>
+                        <h3>Total Operations</h3>
+                        <p style={{ fontSize: '28px', fontWeight: 'bold' }}>{totalOperations}</p>
+                    </div>
+                    <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color: 'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
+                        <h3>Remaining Bulb Hours</h3>
+                        <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{calculateBulbMinutes(data).remainingBulbHours} hr</p>
 
-                    <Grid item md={6} sm={12}>
-                        <h3>Diagnostic Status Distribution</h3>
-                        <div style={{ background: '#f0f0f0', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-                            <ResponsiveContainer width="100%" height={300}>
-                                <PieChart>
-                                    <Pie
-                                        data={diagnosticChartData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+
+                    </div>
+                </div>
+                <div className="quick-links" style={{ marginBottom: '30px' }}>
+                    <h3>Quick Links</h3>
+                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                        <li style={{ marginBottom: '10px', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>
+                            <Link to="/usage" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                View Usage Overview
+                            </Link>
+                        </li>
+                        <li style={{ marginBottom: '10px', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>
+                            <Link to="/hospitals" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                Explore Hospital Details
+                            </Link>
+                        </li>
+                        <li style={{ marginBottom: '10px', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>
+                            <Link to="/robots" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                Check Robot Details
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+                <div className="charts" style={{ marginBottom: '30px' }}>
+                    <Grid container spacing={2}>
+                        <Grid item md={6} sm={12}>
+                            <h3>Usage Trends</h3>
+                            <div style={{ background: '#f0f0f0', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <LineChart data={usageTrendsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+                                        <XAxis dataKey="date" tick={{ fill: '#000' }} />
+                                        <YAxis tick={{ fill: '#000' }} />
+                                        <Tooltip contentStyle={{ background: '#f0f0f0', border: 'none', borderRadius: '8px', color: '#000' }} />
+                                        <Legend />
+                                        <Line type="monotone" dataKey="operations" stroke="#8884d8" activeDot={{ r: 8 }} />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </Grid>
+
+                        <Grid item md={6} sm={12}>
+                            <h3>Diagnostic Status Distribution</h3>
+                            <div style={{ background: '#f0f0f0', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={diagnosticChartData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            fill="#8884d8"
+                                            dataKey="value"
+                                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                                         >
-                                        {diagnosticChartData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip contentStyle={{ background: '#f0f0f0', border: 'none', borderRadius: '8px', color: '#000' }} />
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
+                                            {diagnosticChartData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip contentStyle={{ background: '#f0f0f0', border: 'none', borderRadius: '8px', color: '#000' }} />
+                                        <Legend />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </Grid>
+
                     </Grid>
-
-                </Grid>
-            </div>
-
-            <div className="charts">
-                <h3>Robot Usage by Location</h3>
-                <div style={{ background: '#f0f0f0', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={robotUsageChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-                            <XAxis dataKey="name" tick={{ fill: '#000' }} />
-                            <YAxis tick={{ fill: '#000' }} />
-                            <Tooltip contentStyle={{ background: '#f0f0f0', border: 'none', borderRadius: '8px', color: '#000' }} />
-                            <Legend />
-                            <Bar dataKey="count" fill="#8884d8" />
-                        </BarChart>
-                    </ResponsiveContainer>
                 </div>
-            </div>
+
+                <div className="charts">
+                    <h3>Robot Usage by Location</h3>
+                    <div style={{ background: '#f0f0f0', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={robotUsageChartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+                                <XAxis dataKey="name" tick={{ fill: '#000' }} />
+                                <YAxis tick={{ fill: '#000' }} />
+                                <Tooltip contentStyle={{ background: '#f0f0f0', border: 'none', borderRadius: '8px', color: '#000' }} />
+                                <Legend />
+                                <Bar dataKey="count" fill="#8884d8" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
             </>)}
         </div>
     );

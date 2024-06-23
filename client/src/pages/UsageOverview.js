@@ -133,7 +133,7 @@ const UsageOverview = () => {
                 </div>
                 <div className="card" style={{ flex: 1, background: theme.palette.primary.main, color:'white', padding: '20px', borderRadius: '8px', marginLeft: '20px' }}>
                     <h3>Remaining Bulb Hours</h3>
-                    <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbMinutes} minutes</p>
+                    <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{calculateBulbMinutes(data).remainingBulbHours} hr</p>
                 </div>
             </div>
             <div className="charts" style={{ marginBottom: '30px' }}>
