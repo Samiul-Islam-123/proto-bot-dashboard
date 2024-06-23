@@ -57,6 +57,7 @@ app.post('/deviceData', (req, res) => {
 
 // READ all records
 app.get('/deviceData', (req, res) => {
+    console.log("User is here");
     const sql = 'SELECT * FROM device_data';
     connection.query(sql, (error, results) => {
         if (error) {
