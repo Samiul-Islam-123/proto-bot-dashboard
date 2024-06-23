@@ -55,15 +55,19 @@ app.post('/deviceData', (req, res) => {
     }
 });
 
-// READ all records
+// Route to fetch all device data
 app.get('/deviceData', (req, res) => {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] Received request for /deviceData`);
+
     const sql = 'SELECT * FROM device_data';
     connection.query(sql, (error, results) => {
         if (error) {
-            console.error('Error: ', error);
+            console.error(`[${timestamp}] Error executing query: `, error);
             res.status(500).send(`Error: ${error}`);
         } else {
             res.json(results);
+            console.log(`[${timestamp}] Response sent for /deviceData`);
         }
     });
 });
