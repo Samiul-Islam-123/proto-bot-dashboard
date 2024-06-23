@@ -73,7 +73,6 @@ const Dashboard = () => {
                     <h3>Remaining Bulb Hours</h3>
                     <p style={{ fontSize: '24px', fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbHours} hr</p>
                     <p style={{ fontSize: '20px' }}>{calculateBulbMinutes(data).usedBulbHours && (<>
-                    {calculateBulbMinutes(data).usedBulbDays} Days
                     </>)}</p>
 
                 </div>
