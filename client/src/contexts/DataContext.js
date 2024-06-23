@@ -12,7 +12,7 @@ export const DataProvider = ({ children }) => {
 
   async function fetchData() {
     try {
-      const response = await axios.get(`https://proto-bot-dashboard.onrender.com/deviceData`);
+      const response = await axios.get(`http://13.245.89.170:5500/deviceData`);
       console.log(response)
       setData(response.data); // Ensure you set the correct part of the response
       setLoading(false);
