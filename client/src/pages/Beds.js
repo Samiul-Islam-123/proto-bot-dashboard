@@ -11,6 +11,7 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area
 } from 'recharts';
 import { calculateBulbMinutes, calculateTotalBulbHours } from '../services/Calculations';
+import {Card, CardContent} from "@mui/material"
 
 const Beds = () => {
   const { data } = useContext(DataContext);
@@ -32,6 +33,20 @@ const usageByBedData = useMemo(() => {
   return Object.values(usageByBed).map(item => ({
       ...item,
       usage: parseFloat(item.usage.toFixed(2)) // Round the final usage value to 2 decimal places
+  }));
+}, [data]);
+
+ // Aggregate the code data
+ const codeData = useMemo(() => {
+  const codeCounts = data.reduce((acc, curr) => {
+    const code = curr.Code;
+    acc[code] = (acc[code] || 0) + 1;
+    return acc;
+  }, {});
+
+  return Object.keys(codeCounts).map(key => ({
+    code: key,
+    count: codeCounts[key]
   }));
 }, [data]);
 
@@ -169,6 +184,24 @@ const pieChartData = [
               </ResponsiveContainer>
             </div>
           </Grid>
+
+        <Grid item xs={12} md={12}>
+          <Card style={{ background: theme.palette.background.paper }}>
+            <CardContent>
+              <Typography variant="h6" style={{ marginBottom: '10px' }}>Robot Usage by Code</Typography>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={codeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="code" tick={{ fill: '#ddd' }} />
+                  <YAxis tick={{ fill: '#ddd' }} />
+                  <Tooltip contentStyle={{ background: '#555', border: 'none', borderRadius: '8px', color: '#fff' }} />
+                  <Legend />
+                  <Bar dataKey="count" fill={theme.palette.primary.main} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </Grid>
         </Grid>
       </div>
 

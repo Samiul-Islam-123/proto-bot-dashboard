@@ -2,7 +2,7 @@ import React, { useContext, useState, useMemo } from 'react';
 import { DataContext } from '../contexts/DataContext';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
-    Checkbox, TablePagination,
+    Checkbox, TablePagination, Card, CardContent, Typography,
     Grid, Paper
 } from '@mui/material';
 import {
@@ -88,6 +88,20 @@ const HospitalsPage = () => {
     
         return Object.values(operationsByDate).sort((a, b) => new Date(a.date) - new Date(b.date));
     }, [data]);
+
+    // Aggregate the code data
+  const codeData = useMemo(() => {
+    const codeCounts = data.reduce((acc, curr) => {
+      const code = curr.Code;
+      acc[code] = (acc[code] || 0) + 1;
+      return acc;
+    }, {});
+
+    return Object.keys(codeCounts).map(key => ({
+      code: key,
+      count: codeCounts[key]
+    }));
+  }, [data]);
     
 
     // Table state for sorting and pagination
@@ -204,6 +218,24 @@ const HospitalsPage = () => {
                         </div>
                     </Grid>
 
+                    <Grid item xs={12} md={6}>
+          <Card style={{ background: theme.palette.background.paper }}>
+            <CardContent>
+              <Typography variant="h6" style={{ marginBottom: '10px' }}>Robot Usage by Code</Typography>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={codeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="code" tick={{ fill: '#ddd' }} />
+                  <YAxis tick={{ fill: '#ddd' }} />
+                  <Tooltip contentStyle={{ background: '#555', border: 'none', borderRadius: '8px', color: '#fff' }} />
+                  <Legend />
+                  <Bar dataKey="count" fill={theme.palette.primary.main} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+
                     <Grid item md={6} sm={12}>
                         <h3>Diagnostic Distribution</h3>
                         <div style={{ background: lightThemeColors.background, padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
@@ -237,7 +269,7 @@ const HospitalsPage = () => {
                         </div>
                     </Grid>
 
-                    <Grid item md={6} sm={12}>
+                    <Grid item md={12} sm={12}>
                         <h3>Daily Operations</h3>
                         <div style={{ background: lightThemeColors.background, padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', marginBottom: '20px' }}>
                             <ResponsiveContainer width="100%" height={300}>

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useMemo } from 'react';
 import { DataContext } from '../contexts/DataContext';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
+  Table, Card, CardContent, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel,
   Checkbox, TablePagination,
   Grid, Paper, Typography
 } from '@mui/material';
@@ -32,6 +32,8 @@ const Wards = () => {
       return acc;
     }, {});
 
+
+
     return Object.values(usageByDate);
   }, [data]);
 
@@ -45,6 +47,20 @@ const Wards = () => {
     return Object.keys(diagnosticCount).map(diagnostic => ({
       name: diagnostic,
       value: diagnosticCount[diagnostic],
+    }));
+  }, [data]);
+
+  // Aggregate the code data
+  const codeData = useMemo(() => {
+    const codeCounts = data.reduce((acc, curr) => {
+      const code = curr.Code;
+      acc[code] = (acc[code] || 0) + 1;
+      return acc;
+    }, {});
+
+    return Object.keys(codeCounts).map(key => ({
+      code: key,
+      count: codeCounts[key]
     }));
   }, [data]);
 
@@ -157,7 +173,7 @@ const Wards = () => {
       </Grid>
 
       <Grid container spacing={3} style={{ marginTop: '30px' }}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Paper style={{ background: theme.palette.background.paper, padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
             <Typography variant="h6" gutterBottom>Usage Trends</Typography>
             <ResponsiveContainer width="100%" height={300}>
@@ -173,7 +189,7 @@ const Wards = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Paper style={{ background: theme.palette.background.paper, padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
             <Typography variant="h6" gutterBottom>Diagnostic Distribution</Typography>
             <ResponsiveContainer width="100%" height={300}>
@@ -196,7 +212,37 @@ const Wards = () => {
             </ResponsiveContainer>
           </Paper>
         </Grid>
+
+        <Grid item xs={12} md={4}>
+        <Card style={{ background: theme.palette.background.paper }}>
+          <CardContent>
+            <Typography variant="h6" style={{ marginBottom: '10px' }}>Robot Usage by Code</Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={codeData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={90}
+                  label
+                  dataKey="count"
+                  nameKey="code"
+                >
+                  {codeData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </Grid>
+      </Grid>
+
+      
+
 
       <Grid container spacing={3} style={{ marginTop: '30px' }}>
         <Grid item xs={12}>
