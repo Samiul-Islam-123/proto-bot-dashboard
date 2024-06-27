@@ -167,7 +167,7 @@ const Wards = () => {
         <Grid item xs={12} sm={6} md={3}>
           <Paper style={{ background: theme.palette.primary.main, color: theme.palette.primary.contrastText, padding: '20px', borderRadius: '8px' }}>
             <Typography variant="h6" gutterBottom>Remaining Bulb Hours</Typography>
-            <Typography variant="h4" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbMinutes} minutes</Typography>
+            <Typography variant="h4" style={{ fontWeight: 'bold' }}>{calculateBulbMinutes(data).usedBulbMinutes} hours</Typography>
           </Paper>
         </Grid>
       </Grid>
